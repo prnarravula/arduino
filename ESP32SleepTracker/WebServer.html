@@ -1,0 +1,172 @@
+<!DOCTYPE HTML><html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/boost.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <style>
+    body {
+      min-width: 310px;
+    	max-width: 800px;
+    	height: 400px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-family: Arial;
+      font-size: 2.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>ESP Sleep Tracker</h2>
+  <div id="chart-distance" class="container"></div>
+  <div id="chart-humidity" class="container"></div>
+  <div id="chart-temperature" class="container"></div>
+  <div id="chart-light" class="container"></div>
+</body>
+<script>
+var chartD = new Highcharts.Chart({
+  chart:{ renderTo : 'chart-distance' },
+  title: { text: 'User Distance' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: false }
+    },
+    series: { color: '#059e8a' }
+  },
+  xAxis: { type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'distance (cm)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var x = (new Date()).getTime(),
+          y = parseFloat(this.responseText);
+      chartD.series[0].addPoint([x, y], true, false, true);
+    }
+  };
+  xhttp.open("GET", "/distance", true);
+  xhttp.send();
+}, 500 ) ;
+
+var chartH = new Highcharts.Chart({
+  chart:{ renderTo:'chart-humidity' },
+  title: { text: 'Room Humidity' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: false }
+    }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Humidity (%)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var x = (new Date()).getTime(),
+          y = parseFloat(this.responseText);
+      chartH.series[0].addPoint([x, y], true, false, true);
+    }
+  };
+  xhttp.open("GET", "/humidity", true);
+  xhttp.send();
+}, 30000 ) ;
+
+var chartT = new Highcharts.Chart({
+  chart:{ renderTo:'chart-temperature' },
+  title: { text: 'Room Temperature' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: false }
+    },
+    series: { color: '#18009c' }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Temperature (Fahrenheit)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var x = (new Date()).getTime(),
+          y = parseFloat(this.responseText);
+      chartT.series[0].addPoint([x, y], true, false, true);
+
+    }
+  };
+  xhttp.open("GET", "/temperature", true);
+  xhttp.send();
+}, 30000 ) ;
+
+
+var chartL = new Highcharts.Chart({
+  chart:{ renderTo:'chart-light' },
+  title: { text: 'Room Brightness' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: false }
+    },
+    series: { color: '#9c5800' }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Brightness' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var x = (new Date()).getTime(),
+          y = parseFloat(this.responseText);
+      chartL.series[0].addPoint([x, y], true, false, true);
+    }
+  };
+  xhttp.open("GET", "/light", true);
+  xhttp.send();
+}, 30000 ) ;
+
+
+</script>
+</html>
